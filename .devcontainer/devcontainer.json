@@ -1,0 +1,32 @@
+{
+    "name": ".NET Core",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-20.04",
+    "containerUser": "vscode",
+    "remoteUser": "vscode",
+    // "postCreateCommand": "bash .devcontainer/setup.sh",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker": {
+            "version": "latest",
+            "moby": "false",
+            "installDockerBuildx": "false"
+        },
+        "ghcr.io/devcontainers/features/dotnet:2": {
+            "version": "8.0.100",
+            "additionalVersions": "3.1.426"
+        }
+    },
+    "forwardPorts": [
+        5000,
+        5001
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "ms-dotnettools.csdevkit",
+                "ms-vscode.azurecli",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
