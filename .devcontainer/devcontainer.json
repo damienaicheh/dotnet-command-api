@@ -3,7 +3,7 @@
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu-20.04",
     "containerUser": "vscode",
     "remoteUser": "vscode",
-    // "postCreateCommand": "bash .devcontainer/setup.sh",
+    "postCreateCommand": "bash .devcontainer/setup.sh",
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker": {
             "version": "latest",
