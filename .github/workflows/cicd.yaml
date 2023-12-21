@@ -1,0 +1,35 @@
+# .github/workflows/dotnet.yml
+name: .NET 8 CI
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Build and create Docker image
+    runs-on: ubuntu-latest
+    working-directory: ./src/CommandApi
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish --no-build -o ./publish
+
+    - name: Build Docker image
+      run: docker build -t command-api .
+
+    # Continue with your deployment steps...
