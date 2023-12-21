@@ -1,8 +1,8 @@
 # .github/workflows/dotnet.yml
 name: .NET 8 CI
 
-on:
-  push:
+# on:
+#   push:
 
 jobs:
   build:
