@@ -68,7 +68,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetAllCommands()).Returns(GetCommands(1));
+              repo.GetAllCommands()).Returns(GetCommands(0));
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -332,11 +332,15 @@ namespace CommandAPI.Tests
 
 
 
-
+        /// <summary>
+        /// Generate a list of commands if num is greater than 0, otherwise return only one item
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         private List<Command> GetCommands(int num)
         {
             var commands = new List<Command>();
-            if (num > 0)
+            if (num == 0)
             {
                 commands.Add(new Command
                 {
@@ -344,6 +348,30 @@ namespace CommandAPI.Tests
                     HowTo = "How to genrate a migration",
                     CommandLine = "dotnet ef migrations add <Name of Migration>",
                     Platform = ".Net Core EF"
+                });
+            } else {
+                commands.Add(new Command
+                {
+                    Id = 1,
+                    HowTo = "How to run dotnet app",
+                    CommandLine = "dotnet run",
+                    Platform = ".Net Core"
+                });
+                // restore
+                commands.Add(new Command
+                {
+                    Id = 2,
+                    HowTo = "How to restore a dependency",
+                    CommandLine = "dotnet restore",
+                    Platform = ".Net Core"
+                });
+                // build
+                commands.Add(new Command
+                {
+                    Id = 3,
+                    HowTo = "How to build a project",
+                    CommandLine = "dotnet build",
+                    Platform = ".Net Core"
                 });
             }
             return commands;
