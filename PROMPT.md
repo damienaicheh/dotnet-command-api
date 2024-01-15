@@ -11,6 +11,8 @@ guide me for the first step to migrate
 
 How can I update my NuGet packages after migrating to .NET 8?
 
+Can you apply those changes to my csproj: <PACKAGE LIST>
+
 Tell me if all my packages are still useful
 
 is it necessary to have Swashbuckle.AspNetCore install in .NET 8?
