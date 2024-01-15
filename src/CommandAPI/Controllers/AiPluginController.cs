@@ -1,24 +1,24 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.JsonPatch;
 using System;
 using Microsoft.Extensions.Configuration;
 using CommandAPI.Models;
 using System.Text.Json;
+using AutoMapper;
+using CommandAPI.Dtos;
 
 namespace CommandAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class AiPluginController : ControllerBase
     {
 
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AiPluginController(IConfiguration configuration)
+        public AiPluginController(IConfiguration configuration, IMapper mapper)
         {
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         // GET api/commands
@@ -37,7 +37,11 @@ namespace CommandAPI.Controllers
             // replace {url} with the current domain
             json = json.Replace("{url}", currentDomain, StringComparison.OrdinalIgnoreCase);
 
-            return Ok(JsonSerializer.Deserialize<AiPlugin>(json));
+            var aiPlugin = JsonSerializer.Deserialize<AiPlugin>(json);
+
+            var aiPluginDto = _mapper.Map<AiPluginDto>(aiPlugin);
+
+            return Ok(aiPluginDto);
         }
     }
 }

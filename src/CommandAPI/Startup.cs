@@ -42,10 +42,11 @@ namespace CommandAPI
                 opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
             });
 
-            services.AddControllers().AddNewtonsoftJson(s =>
-            {
-                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            });
+            services.AddControllers();
+            // .AddNewtonsoftJson(s =>
+            // {
+            //     s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            // });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -71,6 +72,12 @@ namespace CommandAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
             app.UseRouting();
 
