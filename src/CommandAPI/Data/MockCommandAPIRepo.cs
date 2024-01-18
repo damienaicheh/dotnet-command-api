@@ -1,57 +1,67 @@
+using System;
 using System.Collections.Generic;
 using CommandAPI.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CommandAPI.Data
 {
     public class MockCommandAPIRepo : ICommandAPIRepo
     {
+        private readonly IMemoryCache _cache;
+
+        public MockCommandAPIRepo(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         public void CreateCommand(Command cmd)
         {
-            throw new System.NotImplementedException();
+            if (cmd == null)
+            {
+                throw new ArgumentNullException(nameof(cmd));
+            }
+
+            _cache.Set(cmd.Id, cmd);
         }
 
         public void DeleteCommand(Command cmd)
         {
-            throw new System.NotImplementedException();
+            if (cmd == null)
+            {
+                throw new ArgumentNullException(nameof(cmd));
+            }
+
+            _cache.Remove(cmd.Id);
         }
 
         public IEnumerable<Command> GetAllCommands()
         {
-            var commands = new List<Command>
+            // store list of commands in cache memory
+            if (!_cache.TryGetValue("myKey", out List<Command> commands))
             {
-                new Command{
-                    Id=0, HowTo="How to genrate a migration", 
-                    CommandLine="dotnet ef migrations add <Name of Migration>", 
-                    Platform=".Net Core EF"},
-                new Command{
-                    Id=1, HowTo="Run Migrations", 
-                    CommandLine="dotnet ef database update", 
-                    Platform=".Net Core EF"},
-                new Command{
-                    Id=2, HowTo="List active migrations", 
-                    CommandLine="dotnet ef migrations list", 
-                    Platform=".Net Core EF"}
-            };
-
-            return commands;
+                return commands;
+            }
+            else
+            {
+                commands = new List<Command>();
+                _cache.Set("myKey", commands);
+                return commands;
+            }
         }
 
         public Command GetCommandById(int id)
         {
-            return new Command{
-                Id=0, HowTo="How to genrate a migration", 
-                CommandLine="dotnet ef migrations add <Name of Migration>", 
-                Platform=".Net Core EF"};
+            return _cache.Get<Command>(id);
         }
 
         public bool SaveChanges()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public void UpdateCommand(Command cmd)
         {
-            throw new System.NotImplementedException();
+            _cache.Set(cmd.Id, cmd);
         }
     }
 }

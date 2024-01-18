@@ -5,10 +5,12 @@ using CommandAPI.Models;
 using System.Text.Json;
 using AutoMapper;
 using CommandAPI.Dtos;
+using System.IO;
 
 namespace CommandAPI.Controllers
 {
     [ApiController]
+    [Route(".well-known")]
     public class AiPluginController : ControllerBase
     {
 
@@ -23,14 +25,14 @@ namespace CommandAPI.Controllers
 
         // GET api/commands
         [HttpGet]
-        [Route(".well-known/ai-plugin.json")]
-        public ActionResult<string> Get()
+        [Route("ai-plugin.json")]
+        public ActionResult<string> GetAiPluginDefinition()
         {
             // get the current domain of the ASP NET Core .NET 8
             var currentDomain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
             var aiPluginSettings = _configuration.GetSection("AiPlugin").Get<AiPlugin>();
-    
+
             // serialize app settings to json using System.Text.Json
             var json = JsonSerializer.Serialize(aiPluginSettings);
 
@@ -42,6 +44,19 @@ namespace CommandAPI.Controllers
             var aiPluginDto = _mapper.Map<AiPluginDto>(aiPlugin);
 
             return Ok(aiPluginDto);
+        }
+
+        [HttpGet]
+        [Route("icon")]
+        public ActionResult<string> GetAiPluginIcon()
+        {
+            if (!System.IO.File.Exists("./Icons/logo.png"))
+            {
+                return NotFound();
+            }
+
+            var imageFileStream = System.IO.File.OpenRead("./Icons/logo.png");
+            return File(imageFileStream, "image/png");
         }
     }
 }

@@ -32,3 +32,14 @@ Get access to Swagger API:
 ```
 https://localhost:5001/swagger/index.html
 ```
+
+Si vous vendez moins de 50 produits :
+
+Taxes : 10% de 2 euros * 50 = 10 euros
+Frais d’exploitation : 15 euros
+Marge nette : (2 euros * 50) - (1 euro * 50) - 10 euros - 15 euros = 25 euros
+Si vous vendez plus de 50 produits :
+
+Taxes : 2% de 2 euros * 100 = 4 euros
+Frais d’exploitation : 5 euros
+Marge nette : (2 euros * 100) - (1 euro * 100) - 4 euros - 5 euros = 91 euros

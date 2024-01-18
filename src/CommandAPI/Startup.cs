@@ -29,32 +29,43 @@ namespace CommandAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var builder = new NpgsqlConnectionStringBuilder();
-            builder.ConnectionString =
-                Configuration.GetConnectionString("PostgreSqlConnection");
-            builder.Username = Configuration["UserID"];
-            builder.Password = Configuration["Password"];
 
-            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            if (Environment.GetEnvironmentVariable("USE_DATABASE") == "true")
             {
-                opt.Audience = Configuration["ResourceID"];
-                opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
-            });
+                builder.ConnectionString =
+               Configuration.GetConnectionString("PostgreSqlConnection");
+                builder.Username = Configuration["UserID"];
+                builder.Password = Configuration["Password"];
 
-            services.AddControllers();
-            // .AddNewtonsoftJson(s =>
-            // {
-            //     s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            // });
+                services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+                {
+                    opt.Audience = Configuration["ResourceID"];
+                    opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
+                });
+            }
+            else
+            {
+                services.AddDbContext<CommandContext>(opt => opt.UseInMemoryDatabase("CommandList"));
+            }
 
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
 
+            services.AddControllers();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Commander API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Open AI Command & Profit API",
+                    Version = "v1"
+                });
+                c.EnableAnnotations();
             });
         }
 
@@ -67,7 +78,12 @@ namespace CommandAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Commander API V1");
             });
 
-            context.Database.Migrate();
+            // Conditionally migrate the database
+            if (Environment.GetEnvironmentVariable("USE_DATABASE") == "true")
+            {
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
