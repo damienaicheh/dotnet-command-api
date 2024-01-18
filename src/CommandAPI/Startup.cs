@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CommandAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using AutoMapper;
-using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
@@ -29,31 +25,39 @@ namespace CommandAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var builder = new NpgsqlConnectionStringBuilder();
-            builder.ConnectionString =
-                Configuration.GetConnectionString("PostgreSqlConnection");
-            builder.Username = Configuration["UserID"];
-            builder.Password = Configuration["Password"];
 
-            services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            if (Environment.GetEnvironmentVariable("USE_DATABASE") == "true")
             {
-                opt.Audience = Configuration["ResourceID"];
-                opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
-            });
+                builder.ConnectionString =
+               Configuration.GetConnectionString("PostgreSqlConnection");
+                builder.Username = Configuration["UserID"];
+                builder.Password = Configuration["Password"];
 
-            services.AddControllers().AddNewtonsoftJson(s =>
+                services.AddDbContext<CommandContext>(opt => opt.UseNpgsql(builder.ConnectionString));
+
+                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+                {
+                    opt.Audience = Configuration["ResourceID"];
+                    opt.Authority = $"{Configuration["Instance"]}{Configuration["TenantId"]}";
+                });
+            }
+            else
             {
-                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            });
+                services.AddDbContext<CommandContext>(opt => opt.UseInMemoryDatabase("CommandList"));
+            }
+
+            services.AddControllers();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Commander API", Version = "v1" });
+                c.EnableAnnotations();
             });
         }
 
@@ -66,11 +70,21 @@ namespace CommandAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Commander API V1");
             });
 
-            context.Database.Migrate();
+            if (Environment.GetEnvironmentVariable("USE_DATABASE") == "true")
+            {
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder => builder
+              .AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+          );
 
             app.UseRouting();
 

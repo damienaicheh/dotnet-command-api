@@ -13,6 +13,15 @@
         "ghcr.io/devcontainers/features/dotnet:2": {
             "version": "8.0.100",
             "additionalVersions": "3.1.426"
+        },
+        "ghcr.io/devcontainers/features/terraform": {
+            "version": "latest",
+            "tflint": "latest",
+            "installTFsec": "true",
+            "installTerraformDocs": "true"
+        },
+        "azure-cli": {
+            "version": "latest"
         }
     },
     "forwardPorts": [
