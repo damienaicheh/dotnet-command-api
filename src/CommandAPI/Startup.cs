@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommandAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,10 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using AutoMapper;
+using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using CommandAPI.Controllers;
-using static CommandAPI.Controllers.ProfitController;
 using CommandAPI.Services;
 
 namespace CommandAPI
@@ -49,18 +51,22 @@ namespace CommandAPI
                 services.AddDbContext<CommandContext>(opt => opt.UseInMemoryDatabase("CommandList"));
             }
 
+            services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
+            services.AddScoped<IProfitService, ProfitService>();
+
             services.AddControllers();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
-            services.AddScoped<IProfitService, ProfitService>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Commander API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Open AI Command & Profit API",
+                    Version = "v1"
+                });
                 c.EnableAnnotations();
             });
         }
@@ -74,6 +80,7 @@ namespace CommandAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Commander API V1");
             });
 
+            // Conditionally migrate the database
             if (Environment.GetEnvironmentVariable("USE_DATABASE") == "true")
             {
                 context.Database.Migrate();
@@ -85,10 +92,10 @@ namespace CommandAPI
             }
 
             app.UseCors(builder => builder
-              .AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-          );
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
             app.UseRouting();
 
