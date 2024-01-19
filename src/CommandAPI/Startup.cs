@@ -11,6 +11,9 @@ using Npgsql;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using CommandAPI.Controllers;
+using static CommandAPI.Controllers.ProfitController;
+using CommandAPI.Services;
 
 namespace CommandAPI
 {
@@ -51,6 +54,7 @@ namespace CommandAPI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
+            services.AddScoped<IProfitService, ProfitService>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
