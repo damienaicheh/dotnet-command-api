@@ -8,9 +8,23 @@ https://github.com/binarythistle/Complete-ASP.NET-Core-API-Tutorial-3rd-Edition-
 To run the project you need to follow the instructions below.
 Activate the version `3.1.426` in the global.json file.
 
-Run a postgresql database in a docker container:
+Restore, build and run the app:
+
+```bash
+dotnet restore
+dotnet build
+dotnet run
+```
+
+Get access to the API you need to use the Swagger UI to test your endpoints:
 
 ```
+https://localhost:5001/swagger/index.html
+```
+
+If you want to use a database locally you need to run a postgresql database in a docker container:
+
+```bash
 docker run --rm -P -p 127.0.0.1:5432:5432 -e POSTGRES_USER="sa" -e POSTGRES_PASSWORD="1234" -e POSTGRES_DB="CmdAPI" --name pg postgres:alpine
 ```
 
@@ -23,24 +37,18 @@ dotnet user-secrets set UserID sa
 dotnet user-secrets set Password 1234
 ```
 
-Restore, build and run the app:
+And add to your `appsettings.json` file:
 
-```
-dotnet restore
-dotnet build
-dotnet run
-```
-
-Get access to the API you need to use the Swagger UI to test your endpoints:
-
-```
-https://localhost:5001/swagger/index.html
+```json
+{
+  "USE_DATABASE": "true",
+}
 ```
 
 ## Running the tests
 
 Here are the instructions to run the tests:
 
-```
-To define
+```bash
+dotnet test
 ```
