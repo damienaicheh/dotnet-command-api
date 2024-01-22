@@ -23,40 +23,40 @@ namespace CommandAPI.Controllers
             _mapper = mapper;
         }
 
-        // GET api/commands
-        [HttpGet]
-        [Route("ai-plugin.json")]
-        public ActionResult<string> GetAiPluginDefinition()
-        {
-            // get the current domain of the ASP NET Core .NET 8
-            var currentDomain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+        // // GET api/commands
+        // [HttpGet]
+        // [Route("ai-plugin.json")]
+        // public ActionResult<string> GetAiPluginDefinition()
+        // {
+        //     // get the current domain of the ASP NET Core .NET 8
+        //     var currentDomain = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
-            var aiPluginSettings = _configuration.GetSection("AiPlugin").Get<AiPlugin>();
+        //     var aiPluginSettings = _configuration.GetSection("AiPlugin").Get<AiPlugin>();
 
-            // serialize app settings to json using System.Text.Json
-            var json = JsonSerializer.Serialize(aiPluginSettings);
+        //     // serialize app settings to json using System.Text.Json
+        //     var json = JsonSerializer.Serialize(aiPluginSettings);
 
-            // replace {url} with the current domain
-            json = json.Replace("{url}", currentDomain, StringComparison.OrdinalIgnoreCase);
+        //     // replace {url} with the current domain
+        //     json = json.Replace("{url}", currentDomain, StringComparison.OrdinalIgnoreCase);
 
-            var aiPlugin = JsonSerializer.Deserialize<AiPlugin>(json);
+        //     var aiPlugin = JsonSerializer.Deserialize<AiPlugin>(json);
 
-            var aiPluginDto = _mapper.Map<AiPluginDto>(aiPlugin);
+        //     var aiPluginDto = _mapper.Map<AiPluginDto>(aiPlugin);
 
-            return Ok(aiPluginDto);
-        }
+        //     return Ok(aiPluginDto);
+        // }
 
-        [HttpGet]
-        [Route("icon")]
-        public ActionResult<string> GetAiPluginIcon()
-        {
-            if (!System.IO.File.Exists("./Icons/logo.png"))
-            {
-                return NotFound();
-            }
+        // [HttpGet]
+        // [Route("icon")]
+        // public ActionResult<string> GetAiPluginIcon()
+        // {
+        //     if (!System.IO.File.Exists("./Icons/logo.png"))
+        //     {
+        //         return NotFound();
+        //     }
 
-            var imageFileStream = System.IO.File.OpenRead("./Icons/logo.png");
-            return File(imageFileStream, "image/png");
-        }
+        //     var imageFileStream = System.IO.File.OpenRead("./Icons/logo.png");
+        //     return File(imageFileStream, "image/png");
+        // }
     }
 }
