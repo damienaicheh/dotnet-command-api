@@ -8,7 +8,7 @@ https://github.com/binarythistle/Complete-ASP.NET-Core-API-Tutorial-3rd-Edition-
 To run the project you need to follow the instructions below.
 Activate the version `3.1.426` in the global.json file.
 
-Restore, build and run the app:
+Restore, build and run the app inside `src/CommandAPI`:
 
 ```bash
 dotnet restore
@@ -50,5 +50,6 @@ And add to your `appsettings.json` file:
 Here are the instructions to run the tests:
 
 ```bash
+cd test/CommandAPI.Tests
 dotnet test
 ```
