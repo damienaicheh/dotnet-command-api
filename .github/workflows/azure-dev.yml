@@ -83,9 +83,9 @@ jobs:
           # RS_STORAGE_ACCOUNT: ${{ vars.RS_STORAGE_ACCOUNT }}
           # RS_CONTAINER_NAME: ${{ vars.RS_CONTAINER_NAME }}
 
-      # - name: Deploy Application
-      #   run: azd deploy --no-prompt
-      #   env:
-      #     AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
-      #     AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
-      #     AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy Application
+        run: azd deploy --no-prompt
+        env:
+          AZURE_ENV_NAME: "pr"
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
