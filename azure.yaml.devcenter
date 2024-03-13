@@ -8,5 +8,3 @@ services:
     project: src/CommandAPI
     language: dotnet
     host: appservice
-infra:
-  provider: terraform

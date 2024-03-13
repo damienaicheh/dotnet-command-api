@@ -69,10 +69,11 @@ jobs:
 
       - name: Provision Infrastructure
         run: |
-          azd env new dev_${{ github.run_id }}
-          azd up
+          azd provision --no-prompt
         env:
-          # AZURE_ENV_NAME: "dev_${{ github.run_id }}"
+        # azd env new dev_${{ github.run_id }}
+          # azd up
+          AZURE_ENV_NAME: "dev_${{ github.run_id }}"
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
