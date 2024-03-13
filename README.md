@@ -118,3 +118,12 @@ AZURE_SUBSCRIPTION_ID=""
 ```bash
 az ad sp create-for-rbac -n <spn-name>
 ```
+
+Save into the secrets AZURE_CREDENTIALS:
+
+{
+    "clientId": "",
+    "clientSecret": "",
+    "tenantId": "",
+    "subscriptionId": ""
+}
