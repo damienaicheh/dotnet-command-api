@@ -23,19 +23,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update az
-        run: | 
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-          az version
+      # - name: Update az
+      #   run: | 
+      #     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      #     az version
 
 
       - name: Install azd
         uses: Azure/setup-azd@v0.1.0
 
-      # - name: Install Nodejs
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
       # - uses: azure/login@v2
       #   with:
