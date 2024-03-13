@@ -119,6 +119,8 @@ AZURE_SUBSCRIPTION_ID=""
 az ad sp create-for-rbac -n <spn-name>
 ```
 
+Add Contributor roles to the SPN at the subscription level.
+
 Save into the secrets AZURE_CREDENTIALS:
 
 {

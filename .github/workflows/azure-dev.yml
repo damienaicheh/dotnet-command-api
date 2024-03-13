@@ -11,9 +11,9 @@ permissions:
 env:
   ACTIONS_RUNNER_DEBUG: true
   # ARM_USE_OIDC: true
-  ARM_TENANT_ID: "${{ vars.ARM_TENANT_ID }}"
-  ARM_CLIENT_ID: "${{ vars.ARM_CLIENT_ID }}"
-  ARM_SUBSCRIPTION_ID: "${{ vars.AZURE_SUBSCRIPTION_ID }}"
+  # ARM_TENANT_ID: "${{ vars.ARM_TENANT_ID }}"
+  # ARM_CLIENT_ID: "${{ vars.ARM_CLIENT_ID }}"
+  # ARM_SUBSCRIPTION_ID: "${{ vars.AZURE_SUBSCRIPTION_ID }}"
 
 jobs:
   deploy:
@@ -42,11 +42,11 @@ jobs:
       #     creds: '{"clientId":"${{ env.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ env.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ env.ARM_TENANT_ID }}"}'
           
       - name: Login az
-        uses: azure/login@v1.6.1
+        uses: azure/login@v2
         with:
-          client-id: ${{ env.ARM_CLIENT_ID }}
-          tenant-id: ${{ env.ARM_TENANT_ID }}
-          subscription-id: ${{ env.ARM_SUBSCRIPTION_ID }}
+          client-id: ${{ vars.ARM_CLIENT_ID }}
+          tenant-id: ${{ vars.ARM_TENANT_ID }}
+          subscription-id: ${{ vars.ARM_SUBSCRIPTION_ID }}
           enable-AzPSSession: true
   
       - name: Set az account
@@ -70,16 +70,16 @@ jobs:
 
       - name: Provision Infrastructure
         run: azd provision --no-prompt
-      #   env:
-      #     AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
-      #     AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
-      #     AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      #     ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
-      #     ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
-      #     ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-      #     RS_RESOURCE_GROUP: ${{ vars.RS_RESOURCE_GROUP }}
-      #     RS_STORAGE_ACCOUNT: ${{ vars.RS_STORAGE_ACCOUNT }}
-      #     RS_CONTAINER_NAME: ${{ vars.RS_CONTAINER_NAME }}
+        env:
+          AZURE_ENV_NAME: "dev_${{ github.run_id }}"
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
+          ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          # RS_RESOURCE_GROUP: ${{ vars.RS_RESOURCE_GROUP }}
+          # RS_STORAGE_ACCOUNT: ${{ vars.RS_STORAGE_ACCOUNT }}
+          # RS_CONTAINER_NAME: ${{ vars.RS_CONTAINER_NAME }}
 
       # - name: Deploy Application
       #   run: azd deploy --no-prompt
