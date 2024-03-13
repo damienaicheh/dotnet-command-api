@@ -52,3 +52,69 @@ Here are the instructions to run the tests:
 ```bash
 dotnet test
 ```
+
+## Use AZD to connect to Dev Center
+
+Official documentation:
+
+https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/ade-integration
+
+Choisir l'env:
+
+```bash
+azd env select <env>
+```
+
+```bash
+azd config set platform.type devcenter
+```
+
+```bash
+azd up
+```
+
+Disable conection with Dev Center:
+
+```bash
+azd config unset platform
+```
+
+In the environment folder:
+
+config.json:
+
+```json
+{
+  "platform": {
+    "config": {
+      "catalog": "dcc",
+      "environmentDefinition": "WebApp",
+      "environmentType": "Dev",
+      "name": "dc-devbox",
+      "project": "developers",
+      "user": "me"
+    }
+  },
+  "provision": {
+    "parameters": {
+      "name": "cmd"
+    }
+  }
+}
+```
+
+.env file:
+
+```sh
+AZD_PIPELINE_PROVIDER="github"
+AZURE_ENV_NAME="dev"
+AZURE_LOCATION="westeurope"
+AZURE_RESOURCE_GROUP="developers-dev"
+AZURE_SUBSCRIPTION_ID=""
+```
+
+## GitHub Actions
+
+```bash
+az ad sp create-for-rbac -n <spn-name>
+```
