@@ -9,7 +9,7 @@ variable "environment" {
   type        = string
   default     = "dev"
   validation {
-    condition     = can(regex("(dev|stg|pro)", var.environment))
+    condition     = can(regex("(pr|dev|stg|pro)", var.environment))
     error_message = "The environment value must be a valid."
   }
 }
