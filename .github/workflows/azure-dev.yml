@@ -8,6 +8,10 @@ permissions:
     id-token: write
     contents: read
 
+env:
+  ACTIONS_RUNNER_DEBUG: true
+  ARM_USE_OIDC: true
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
