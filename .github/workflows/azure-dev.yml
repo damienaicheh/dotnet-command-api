@@ -68,9 +68,11 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Provision Infrastructure
-        run: azd provision --no-prompt
+        run: |
+          azd env new dev_${{ github.run_id }}
+          azd up
         env:
-          AZURE_ENV_NAME: "dev_${{ github.run_id }}"
+          # AZURE_ENV_NAME: "dev_${{ github.run_id }}"
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
