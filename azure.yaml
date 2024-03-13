@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/alpha/azure.yaml.json
+
+name: command-api-terraform
+metadata:
+  template: command-api-terraform@0.0.1-beta
+services:
+  api:
+    project: src/CommandAPI
+    language: dotnet
+    host: appservice
+infra:
+  provider: terraform

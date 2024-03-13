@@ -83,3 +83,5 @@ terraform.rc
 __azurite*
 __blobstorage*
 __queuestorage*
+.azure
+.mono
