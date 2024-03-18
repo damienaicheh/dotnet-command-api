@@ -1,5 +1,7 @@
 on:
   workflow_dispatch:
+  pull_requests:
+    - main
   push:
     branches:
       - feat/azd
@@ -10,24 +12,16 @@ permissions:
 
 env:
   ACTIONS_RUNNER_DEBUG: true
-  # ARM_USE_OIDC: true
-  # ARM_TENANT_ID: "${{ vars.ARM_TENANT_ID }}"
-  # ARM_CLIENT_ID: "${{ vars.ARM_CLIENT_ID }}"
-  # ARM_SUBSCRIPTION_ID: "${{ vars.AZURE_SUBSCRIPTION_ID }}"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: 
+      name: pr
+      url: ${{ steps.env_info.outputs.app_service_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # - name: Update az
-      #   run: | 
-      #     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      #     az version
-
 
       - name: Install azd
         uses: Azure/setup-azd@v0.1.0
@@ -35,11 +29,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.100'
-
-      # - uses: azure/login@v2
-      #   with:
-      #     creds: '{"clientId":"${{ env.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ env.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ env.ARM_TENANT_ID }}"}'
-          
+      
       - name: Login az
         uses: azure/login@v2
         with:
@@ -71,17 +61,12 @@ jobs:
         run: |
           azd provision --no-prompt
         env:
-        # azd env new dev_${{ github.run_id }}
-          # azd up
           AZURE_ENV_NAME: "pr"
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
           ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          # RS_RESOURCE_GROUP: ${{ vars.RS_RESOURCE_GROUP }}
-          # RS_STORAGE_ACCOUNT: ${{ vars.RS_STORAGE_ACCOUNT }}
-          # RS_CONTAINER_NAME: ${{ vars.RS_CONTAINER_NAME }}
 
       - name: Deploy Application
         run: azd deploy --no-prompt
@@ -89,3 +74,10 @@ jobs:
           AZURE_ENV_NAME: "pr"
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Update environment Url
+        id: env_info
+        run:
+          cd .azure/dev/infra
+          APP_SERVICE_URL="$(terraform output -raw APP_SERVICE_URL)"
+          echo "app_service_url=$APP_SERVICE_URL" >> $GITHUB_OUTPUT
