@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: pr
-      url: ${{ steps.env_info.outputs.app_service_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,11 +74,3 @@ jobs:
           AZURE_ENV_NAME: "pr"
           AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Update environment Url
-        id: env_info
-        run: |
-          ls
-          cd dotnet-command-api/dotnet-command-api/.azure/pr/infra
-          APP_SERVICE_URL="$(terraform output -raw APP_SERVICE_URL)"
-          echo "app_service_url=$APP_SERVICE_URL" >> $GITHUB_OUTPUT
