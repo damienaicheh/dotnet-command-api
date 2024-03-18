@@ -78,7 +78,7 @@ jobs:
 
       - name: Update environment Url
         id: env_info
-        run:
+        run: |
           cd .azure/dev/infra
           APP_SERVICE_URL="$(terraform output -raw APP_SERVICE_URL)"
           echo "app_service_url=$APP_SERVICE_URL" >> $GITHUB_OUTPUT
