@@ -129,3 +129,11 @@ Save into the secrets AZURE_CREDENTIALS:
     "tenantId": "",
     "subscriptionId": ""
 }
+
+## Deploy to web app
+
+dotnet publish -c Release -o outputs
+
+cd outputs && zip -r publish.zip  .
+
+Deploy using App Service extension.
