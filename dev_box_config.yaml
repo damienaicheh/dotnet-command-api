@@ -1,0 +1,35 @@
+# https://github.com/microsoft/devcenter-catalog
+# From https://github.com/microsoft/devcenter-examples
+$schema: 1.0
+name: "devbox-customization"
+tasks:
+  - name: choco
+    parameters:
+      package: vscode
+
+  - name: choco
+    parameters:
+      package: azd
+
+  - name: git-clone
+    description: Clone this repository into C:\Documents
+    parameters:
+      repositoryUrl: https://github.com/damienaicheh/dotnet-command-api.git
+      directory: C:\Documents
+
+  - name: powershell
+    description: Install Azure Cli - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-vscode.azurecli
+
+  - name: powershell
+    description: Install Azure Dev Tools - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-azuretools.azure-dev
+
+  - name: powershell
+    description: Install Azure Dev Tools - Visual Studio Code extensions
+    parameters:
+      command: code --install-extension ms-vscode.vscode-node-azure-pack
+
+# Other possibilities: powershell, winget, install-vs-extension    
