@@ -134,6 +134,4 @@ Save into the secrets AZURE_CREDENTIALS:
 
 dotnet publish -c Release -o outputs
 
-cd outputs && zip -r publish.zip  .
-
 Deploy using App Service extension.
