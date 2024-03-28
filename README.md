@@ -62,11 +62,19 @@ https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/ade-integr
 Choisir l'env:
 
 ```bash
+azd auth login --use-device-code --tenant-id <tenant-id>
+```
+
+```bash
 azd env select <env>
 ```
 
 ```bash
 azd config set platform.type devcenter
+```
+
+```bash
+azd config unset platform.type 
 ```
 
 ```bash

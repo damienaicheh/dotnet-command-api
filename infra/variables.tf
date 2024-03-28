@@ -8,10 +8,6 @@ variable "environment" {
   description = "The environment deployed"
   type        = string
   default     = "dev"
-  validation {
-    condition     = can(regex("(pr|dev|stg|pro)", var.environment))
-    error_message = "The environment value must be a valid."
-  }
 }
 
 variable "location" {
