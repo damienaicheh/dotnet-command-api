@@ -66,6 +66,10 @@ azd auth login --use-device-code --tenant-id <tenant-id>
 ```
 
 ```bash
+azd env new <env>
+```
+
+```bash
 azd env select <env>
 ```
 
