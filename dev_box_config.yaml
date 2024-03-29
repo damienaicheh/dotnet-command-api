@@ -1,5 +1,7 @@
 # https://github.com/microsoft/devcenter-catalog
 # From https://github.com/microsoft/devcenter-examples
+# Optionaly declare the devbox image to use 
+
 $schema: 1.0
 name: "devbox-customization"
 tasks:
